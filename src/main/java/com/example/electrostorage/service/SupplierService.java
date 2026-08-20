@@ -36,6 +36,7 @@ public class SupplierService {
         return supplierRepository.save(supplier);
     }
 
+    // Sletter kun leverandøren, hvis den ikke bruges af komponenter eller ordrer
     @Transactional
     public void deleteSupplier(Long id) {
         if (!supplierRepository.existsById(id)) {

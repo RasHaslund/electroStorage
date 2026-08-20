@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponents();
 });
 
+// Henter ordren fra URL-id'et og opdaterer hele ordresiden
 async function loadOrder() {
     if (!orderId) {
         document.querySelector("#orderDetails").textContent = "Mangler order id i URL'en.";
@@ -32,6 +33,7 @@ async function loadOrder() {
     updateVisibleActions(order);
 }
 
+// Viser de overordnede ordreoplysninger
 function displayOrder(order) {
     document.querySelector("#orderDetails").innerHTML = `
         <div class="details">
@@ -49,6 +51,7 @@ function displayOrder(order) {
     document.querySelector("#expectedDeliveryDate").value = order.expectedDeliveryDate || "";
 }
 
+// Viser ordrelinjer og Fjern-knapper, hvis ordren er en kladde
 function displayOrderLines(order) {
     const tableBody = document.querySelector("#orderLineTableBody");
     tableBody.innerHTML = "";
@@ -73,6 +76,7 @@ function displayOrderLines(order) {
     });
 }
 
+// Viser kun de handlinger der passer til ordrens aktuelle status
 function updateVisibleActions(order) {
     document.querySelector("#editOrderSection").style.display = isDraft(order) ? "block" : "none";
     document.querySelector("#sendOrderSection").style.display = isDraft(order) ? "block" : "none";
@@ -88,6 +92,7 @@ function hideAllActions() {
     document.querySelector("#orderActionsSection").style.display = "none";
 }
 
+// Henter komponenter der kan vælges til ordrelinjer
 async function loadComponents() {
     const response = await fetch("/components");
 
@@ -100,6 +105,7 @@ async function loadComponents() {
     displayComponentOptions(components);
 }
 
+// Fylder dropdownen med komponenter der ikke er udgået
 function displayComponentOptions(components) {
     const select = document.querySelector("#componentId");
     select.innerHTML = "";
@@ -114,6 +120,7 @@ function displayComponentOptions(components) {
         });
 }
 
+// Tilføjer en komponentlinje til ordren og genindlæser siden
 async function addComponentToOrder(event) {
     event.preventDefault();
 
@@ -139,6 +146,7 @@ async function addComponentToOrder(event) {
     loadOrder();
 }
 
+// Fjerner en komponentlinje fra en ordrekladde
 async function removeOrderLine(orderLineId) {
     const response = await fetch(`/orders/${orderId}/components/${orderLineId}`, {
         method: "DELETE"
@@ -152,6 +160,7 @@ async function removeOrderLine(orderLineId) {
     loadOrder();
 }
 
+// Sender ordren og låser den for flere komponenter
 async function sendOrder(event) {
     event.preventDefault();
 
@@ -171,6 +180,7 @@ async function sendOrder(event) {
     loadOrder();
 }
 
+// Gemmer trackingkode og forventet leveringsdato
 async function updateDeliveryInfo(event) {
     event.preventDefault();
 
@@ -196,6 +206,7 @@ async function updateDeliveryInfo(event) {
     loadOrder();
 }
 
+// Marker ordren som modtaget, så backend lægger varerne på lager
 async function receiveOrder() {
     const response = await fetch(`/orders/${orderId}/receive`, {
         method: "PATCH"
@@ -209,6 +220,7 @@ async function receiveOrder() {
     loadOrder();
 }
 
+// Annullerer ordren og opdaterer siden
 async function cancelOrder() {
     const response = await fetch(`/orders/${orderId}/cancel`, {
         method: "PATCH"
@@ -222,6 +234,7 @@ async function cancelOrder() {
     loadOrder();
 }
 
+// Omsætter ordredata til en enkel dansk status
 function getOrderStatus(order) {
     if (order.cancelled) {
         return "Annulleret";

@@ -17,6 +17,7 @@ public class AdminUserInitializer implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Opretter den faste admin-bruger, hvis den ikke allerede findes
     @Override
     public void run(String... args) {
         if (!userRepository.existsByUsername("admin")) {

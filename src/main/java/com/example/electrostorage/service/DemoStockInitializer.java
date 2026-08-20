@@ -16,6 +16,7 @@ public class DemoStockInitializer implements CommandLineRunner {
         this.componentRepository = componentRepository;
     }
 
+    // Giver demo-komponenter lidt startlager uden at overskrive eksisterende lager
     @Override
     public void run(String... args) {
         List<ComponentModel> components = componentRepository.findAll();

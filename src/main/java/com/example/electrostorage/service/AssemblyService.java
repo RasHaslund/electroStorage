@@ -39,6 +39,7 @@ public class AssemblyService {
                 .toList();
     }
 
+    // Henter én stykliste og pakker den som DTO til frontend
     public AssemblyResponse getPartsList(Long id) {
         PartsListModel partsList = partsListRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parts list not found"));
@@ -46,6 +47,7 @@ public class AssemblyService {
         return createAssemblyResponse(partsList);
     }
 
+    // Opretter både selve styklisten og dens komponentlinjer
     @Transactional
     public PartsListModel createAssembly(CreateAssemblyRequest request) {
         if (request.getName() == null || request.getName().isBlank()) {
@@ -82,6 +84,7 @@ public class AssemblyService {
         return savedPartsList;
     }
 
+    // Kontrollerer lageret, trækker delene fra og lægger resultatet på lager
     @Transactional
     public void produceAssembly(Long assemblyId, int quantity) {
         if (quantity <= 0) {
@@ -114,6 +117,7 @@ public class AssemblyService {
         componentRepository.save(resultComponent);
     }
 
+    // Sletter først stykliste-linjerne og derefter selve styklisten
     @Transactional
     public void deleteAssembly(Long id) {
         PartsListModel partsList = partsListRepository.findById(id)
@@ -124,6 +128,7 @@ public class AssemblyService {
         partsListRepository.delete(partsList);
     }
 
+    // Mapper en stykliste og dens komponenter til en enkel response
     private AssemblyResponse createAssemblyResponse(PartsListModel partsList) {
         ComponentModel resultComponent = partsList.getResultComponent();
         List<PartsListItemModel> partsListItems = partsListItemRepository.findByPartsList_Id(partsList.getId());

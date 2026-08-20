@@ -23,6 +23,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Sætter JWT-filteret ind og styrer hvilke endpoints der er åbne eller ADMIN-only
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
         http

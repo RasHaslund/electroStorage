@@ -29,6 +29,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    // Validerer login og sender JWT tilbage i en HttpOnly-cookie
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         Authentication auth = authenticationManager.authenticate(
@@ -50,6 +51,7 @@ public class AuthController {
                 .body(Map.of("message", "Login successful"));
     }
 
+    // Fjerner JWT-cookien ved at sende en tom cookie med maxAge 0
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         ResponseCookie jwtCookie = ResponseCookie.from("JWT", "")
@@ -65,6 +67,7 @@ public class AuthController {
                 .body(Map.of("message", "Logout successful"));
     }
 
+    // Fortæller frontend om brugeren er logget ind og har ADMIN-rolle
     @GetMapping("/status")
     public Map<String, Boolean> status() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

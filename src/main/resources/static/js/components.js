@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadPage();
 });
 
+// Henter admin-status og starter dataindlæsningen på siden
 async function loadPage() {
     const status = await getAuthStatus();
     isAdmin = status.admin;
@@ -14,6 +15,7 @@ async function loadPage() {
     loadAssemblies();
 }
 
+// Henter komponenterne og viser dem i tabellen
 async function loadComponents() {
     const response = await fetch("/components");
 
@@ -26,6 +28,7 @@ async function loadComponents() {
     displayComponents(components);
 }
 
+// Bygger komponenttabellen og viser admin-knapper ved behov
 function displayComponents(components) {
     const tableBody = document.querySelector("#componentTableBody");
     tableBody.innerHTML = "";
@@ -57,6 +60,7 @@ function displayComponents(components) {
     });
 }
 
+// Sender formularen til backend og genindlæser komponentlisten
 async function createComponent(event) {
     event.preventDefault();
 
@@ -85,6 +89,7 @@ async function createComponent(event) {
     loadComponents();
 }
 
+// Marker en komponent som udgået via backend
 async function markAsDiscontinued(id) {
     const response = await fetch(`/components/${id}/discontinued`, {
         method: "PATCH",
@@ -99,6 +104,7 @@ async function markAsDiscontinued(id) {
     loadComponents();
 }
 
+// Henter styklister til dropdownen i "Saml komponent"
 async function loadAssemblies() {
     const response = await fetch("/assemblies");
 
@@ -123,6 +129,7 @@ function displayAssemblies(assemblies) {
     });
 }
 
+// Producerer en stykliste og opdaterer lager-visningen bagefter
 async function produceAssembly(event) {
     event.preventDefault();
 

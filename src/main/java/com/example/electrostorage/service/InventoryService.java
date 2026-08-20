@@ -43,6 +43,7 @@ public class InventoryService {
                 .toList();
     }
 
+    // Gemmer en lageroptælling og sætter komponentens lager til det optalte antal
     @Transactional
     public InventoryCountItemModel registerCount(InventoryCountRequest request) {
         ComponentModel component = componentRepository.findById(request.getComponentId())
@@ -75,6 +76,7 @@ public class InventoryService {
         return savedItem;
     }
 
+    // Finder seneste optælling og laver én linje til lageroversigten
     private InventoryOverviewResponse createInventoryOverviewResponse(ComponentModel component) {
         Optional<InventoryCountItemModel> latestCount = inventoryCountItemRepository
                 .findFirstByComponent_IdOrderByInventoryCount_CountedAtDesc(component.getId());

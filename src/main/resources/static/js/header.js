@@ -1,3 +1,4 @@
+// Bygger den fælles header og opdaterer admin-visning
 async function loadHeader() {
     const header = document.querySelector("#header");
 
@@ -24,6 +25,7 @@ async function loadHeader() {
 
 loadHeader();
 
+// Henter login-status, som frontend bruger til at vise admin-controls
 async function getAuthStatus() {
     try {
         const response = await fetch("/api/auth/status", {
@@ -40,12 +42,14 @@ async function getAuthStatus() {
     }
 }
 
+// Viser eller skjuler elementer der kun er for ADMIN
 function setAdminControlsVisible(admin) {
     document.querySelectorAll(".admin-only").forEach(element => {
         element.style.display = admin ? "block" : "none";
     });
 }
 
+// Viser enten login-link eller log ud-knap i headeren
 function displayAuthNavigation(status) {
     const authNavigation = document.querySelector("#authNavigation");
 
@@ -62,6 +66,7 @@ function displayAuthNavigation(status) {
     document.querySelector("#logoutButton").addEventListener("click", logout);
 }
 
+// Logger ud ved at få backend til at fjerne JWT-cookien
 async function logout() {
     await fetch("/api/auth/logout", {
         method: "POST",

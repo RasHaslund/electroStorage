@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadInventory();
 });
 
+// Henter komponenter til lageroptællings-formularen
 async function loadComponents() {
     const response = await fetch("/components");
 
@@ -29,6 +30,7 @@ function displayComponentOptions(components) {
     });
 }
 
+// Henter lageroversigten fra backend
 async function loadInventory() {
     const response = await fetch("/inventory");
 
@@ -41,6 +43,7 @@ async function loadInventory() {
     displayInventory(inventory);
 }
 
+// Viser lagerstatus og seneste optælling i tabellen
 function displayInventory(inventory) {
     const tableBody = document.querySelector("#inventoryTableBody");
     tableBody.innerHTML = "";
@@ -59,6 +62,7 @@ function displayInventory(inventory) {
     });
 }
 
+// Gemmer en optælling og opdaterer lageroversigten bagefter
 async function registerInventoryCount(event) {
     event.preventDefault();
 
@@ -88,6 +92,7 @@ async function registerInventoryCount(event) {
     loadInventory();
 }
 
+// Sætter optællingstidspunktet til nu i inputfeltets format
 function setDefaultCountedAt() {
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());

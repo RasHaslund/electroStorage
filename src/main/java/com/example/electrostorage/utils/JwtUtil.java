@@ -18,6 +18,7 @@ public class JwtUtil {
         this.secretKey = secretKey;
     }
 
+    // Laver et JWT-token med brugernavnet som subject
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -27,6 +28,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // Læser brugernavnet ud af et gyldigt token
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey.getBytes())
@@ -36,6 +38,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    // Tjekker om tokenet kan parses og er signeret korrekt
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()

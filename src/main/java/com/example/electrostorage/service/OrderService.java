@@ -49,6 +49,7 @@ public class OrderService {
         return createOrderResponse(order);
     }
 
+    // Opretter en ny ordre som kladde hos den valgte leverandør
     public PurchaseOrderModel createOrder(CreateOrderRequest request) {
         SupplierModel supplier = supplierRepository.findById(request.getSupplierId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier not found"));
@@ -64,6 +65,7 @@ public class OrderService {
         return purchaseOrderRepository.save(order);
     }
 
+    // Tilføjer en ordrelinje, hvis ordren stadig kan redigeres
     public OrderLineModel addComponentToOrder(Long orderId, AddOrderLineRequest request) {
         PurchaseOrderModel order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
@@ -91,6 +93,7 @@ public class OrderService {
         return orderLineRepository.save(orderLine);
     }
 
+    // Fjerner en ordrelinje fra en ordre, der endnu ikke er sendt
     public void removeComponentFromOrder(Long orderId, Long orderLineId) {
         PurchaseOrderModel order = findOrder(orderId);
         OrderLineModel orderLine = orderLineRepository.findById(orderLineId)
@@ -111,6 +114,7 @@ public class OrderService {
         orderLineRepository.delete(orderLine);
     }
 
+    // Marker ordren som sendt og låser den for flere ordrelinjer
     public PurchaseOrderModel sendOrder(Long orderId, SendOrderRequest request) {
         PurchaseOrderModel order = findOrder(orderId);
 
@@ -126,6 +130,7 @@ public class OrderService {
         return purchaseOrderRepository.save(order);
     }
 
+    // Gemmer tracking og forventet levering på en sendt ordre
     public PurchaseOrderModel updateDeliveryInfo(Long orderId, UpdateDeliveryInfoRequest request) {
         PurchaseOrderModel order = findOrder(orderId);
 
@@ -147,6 +152,7 @@ public class OrderService {
         return purchaseOrderRepository.save(order);
     }
 
+    // Annullerer en ordre, så længe den ikke er modtaget
     public PurchaseOrderModel cancelOrder(Long orderId) {
         PurchaseOrderModel order = findOrder(orderId);
 
@@ -158,6 +164,7 @@ public class OrderService {
         return purchaseOrderRepository.save(order);
     }
 
+    // Lægger de modtagne komponenter på lager og markerer ordren som modtaget
     @Transactional
     public PurchaseOrderModel receiveOrder(Long orderId) {
         PurchaseOrderModel order = findOrder(orderId);
@@ -191,6 +198,7 @@ public class OrderService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
     }
 
+    // Mapper en ordre og dens linjer til et simpelt response-objekt
     private OrderResponse createOrderResponse(PurchaseOrderModel order) {
         List<OrderLineResponse> orderLines = orderLineRepository.findByPurchaseOrder_Id(order.getId())
                 .stream()

@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadPage();
 });
 
+// Henter admin-status og starter leverandør- og ordrevisningen
 async function loadPage() {
     const status = await getAuthStatus();
     isAdmin = status.admin;
@@ -14,6 +15,7 @@ async function loadPage() {
     loadOrders();
 }
 
+// Henter leverandører til både ordre-formular og leverandørlisten
 async function loadSuppliers() {
     const response = await fetch("/suppliers");
 
@@ -26,6 +28,7 @@ async function loadSuppliers() {
     displaySuppliers(suppliers);
 }
 
+// Viser leverandører og tilføjer Slet-knapper for ADMIN
 function displaySuppliers(suppliers) {
     const select = document.querySelector("#supplierId");
     select.innerHTML = "";
@@ -62,6 +65,7 @@ function displaySuppliers(suppliers) {
     });
 }
 
+// Henter alle ordrer og deler dem op efter status
 async function loadOrders() {
     const response = await fetch("/orders");
 
@@ -137,6 +141,7 @@ function displayCancelledOrders(orders) {
     });
 }
 
+// Opretter en ny ordre og opdaterer oversigten
 async function createOrder(event) {
     event.preventDefault();
 
@@ -161,6 +166,7 @@ async function createOrder(event) {
     loadOrders();
 }
 
+// Opretter en leverandør og genindlæser leverandørlisten
 async function createSupplier(event) {
     event.preventDefault();
 
@@ -188,6 +194,7 @@ async function createSupplier(event) {
     loadSuppliers();
 }
 
+// Sletter en leverandør, hvis backend tillader det
 async function deleteSupplier(id) {
     const response = await fetch(`/suppliers/${id}`, {
         method: "DELETE",
@@ -202,6 +209,7 @@ async function deleteSupplier(id) {
     loadSuppliers();
 }
 
+// Omsætter datoer og flag til en tekststatus på siden
 function getOrderStatus(order) {
     if (order.cancelled) {
         return "Annulleret";

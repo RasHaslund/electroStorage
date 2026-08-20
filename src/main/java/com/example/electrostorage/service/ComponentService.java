@@ -26,6 +26,7 @@ public class ComponentService {
         return componentRepository.findAll();
     }
 
+    // Opretter en komponent hos en eksisterende leverandør
     public ComponentModel createComponent(CreateComponentRequest request) {
         SupplierModel supplier = supplierRepository.findById(request.getSupplierId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier not found"));
@@ -41,6 +42,7 @@ public class ComponentService {
         return componentRepository.save(component);
     }
 
+    // Marker komponenten som udgået, så den ikke kan bestilles fremover
     public ComponentModel markAsDiscontinued(Long id) {
         ComponentModel component = componentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Component not found"));

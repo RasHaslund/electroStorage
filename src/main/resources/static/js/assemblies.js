@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadPage();
 });
 
+// Henter admin-status og starter stykliste-siden
 async function loadPage() {
     const status = await getAuthStatus();
     isAdmin = status.admin;
@@ -16,6 +17,7 @@ async function loadPage() {
     loadAssemblies();
 }
 
+// Henter komponenter til opret-stykliste-formularen
 async function loadComponents() {
     const response = await fetch("/components");
 
@@ -41,6 +43,7 @@ function displayResultComponentOptions() {
     });
 }
 
+// Tilføjer en ny linje til opret-stykliste-formularen
 function addAssemblyItemRow() {
     const rows = document.querySelector("#assemblyItemRows");
     const row = document.createElement("div");
@@ -75,6 +78,7 @@ function addAssemblyItemRow() {
     rows.appendChild(row);
 }
 
+// Samler formularens linjer og sender en ny stykliste til backend
 async function createAssembly(event) {
     event.preventDefault();
 
@@ -134,6 +138,7 @@ async function createAssembly(event) {
     loadAssemblies();
 }
 
+// Henter alle styklister med deres komponentlinjer
 async function loadAssemblies() {
     const response = await fetch("/assemblies");
 
@@ -146,6 +151,7 @@ async function loadAssemblies() {
     displayAssemblies(assemblies);
 }
 
+// Viser alle styklister direkte med deres komponenter og antal
 function displayAssemblies(assemblies) {
     const assemblyList = document.querySelector("#assemblyList");
     assemblyList.innerHTML = "";
@@ -183,6 +189,7 @@ function displayAssemblies(assemblies) {
     });
 }
 
+// Sletter en stykliste og genindlæser listen
 async function deleteAssembly(id) {
     const response = await fetch(`/assemblies/${id}`, {
         method: "DELETE",
