@@ -1,42 +1,31 @@
-package com.example.electrostorage.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+package com.example.electrostorage.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
-@Entity
-@Table(name = "purchase_order")
-public class PurchaseOrderModel {
+public class OrderResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private SupplierModel supplier;
-
-    private String trackingCode;
+    private String supplierName;
     private LocalDate sentDate;
     private LocalDate expectedDeliveryDate;
+    private String trackingCode;
     private LocalDate receivedDate;
     private boolean cancelled;
+    private List<OrderLineResponse> orderLines;
 
-    public PurchaseOrderModel() {
+    public OrderResponse() {
     }
 
-    public PurchaseOrderModel(SupplierModel supplier, String trackingCode, LocalDate sentDate, LocalDate expectedDeliveryDate, LocalDate receivedDate) {
-        this.supplier = supplier;
-        this.trackingCode = trackingCode;
+    public OrderResponse(Long id, String supplierName, LocalDate sentDate, LocalDate expectedDeliveryDate, String trackingCode, LocalDate receivedDate, boolean cancelled, List<OrderLineResponse> orderLines) {
+        this.id = id;
+        this.supplierName = supplierName;
         this.sentDate = sentDate;
         this.expectedDeliveryDate = expectedDeliveryDate;
+        this.trackingCode = trackingCode;
         this.receivedDate = receivedDate;
+        this.cancelled = cancelled;
+        this.orderLines = orderLines;
     }
 
     public Long getId() {
@@ -47,20 +36,12 @@ public class PurchaseOrderModel {
         this.id = id;
     }
 
-    public SupplierModel getSupplier() {
-        return supplier;
+    public String getSupplierName() {
+        return supplierName;
     }
 
-    public void setSupplier(SupplierModel supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getTrackingCode() {
-        return trackingCode;
-    }
-
-    public void setTrackingCode(String trackingCode) {
-        this.trackingCode = trackingCode;
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public LocalDate getSentDate() {
@@ -79,6 +60,14 @@ public class PurchaseOrderModel {
         this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
+    public String getTrackingCode() {
+        return trackingCode;
+    }
+
+    public void setTrackingCode(String trackingCode) {
+        this.trackingCode = trackingCode;
+    }
+
     public LocalDate getReceivedDate() {
         return receivedDate;
     }
@@ -93,5 +82,13 @@ public class PurchaseOrderModel {
 
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public List<OrderLineResponse> getOrderLines() {
+        return orderLines;
+    }
+
+    public void setOrderLines(List<OrderLineResponse> orderLines) {
+        this.orderLines = orderLines;
     }
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordrer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <h1>Ordrer</h1>
+
+    <section class="form-row">
+        <div>
+            <h2>Opret ordre</h2>
+            <form id="orderForm" class="form">
+                <label>
+                    Leverandør
+                    <select id="supplierId" required></select>
+                </label>
+
+                <button type="submit">Opret ordre</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Opret leverandør</h2>
+            <form id="supplierForm" class="form">
+                <label>
+                    Navn
+                    <input id="supplierName" type="text" required>
+                </label>
+
+                <label>
+                    Adresse
+                    <input id="supplierAddress" type="text" required>
+                </label>
+
+                <button type="submit">Opret leverandør</button>
+            </form>
+            <p id="supplierMessage" class="message"></p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Aktive ordrer</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Leverandør</th>
+                <th>Status</th>
+                <th>Trackingkode</th>
+                <th>Sendt</th>
+                <th>Forventet levering</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="activeOrderTableBody"></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Modtagne ordrer</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Leverandør</th>
+                <th>Trackingkode</th>
+                <th>Modtaget</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="receivedOrderTableBody"></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Annullerede ordrer</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Leverandør</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="cancelledOrderTableBody"></tbody>
+        </table>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script src="js/orders.js"></script>
+</body>
+</html>

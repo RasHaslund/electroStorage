@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styklister</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <h1>Styklister</h1>
+
+    <section>
+        <h2>Opret stykliste</h2>
+        <form id="assemblyForm" class="form wide-form">
+            <label>
+                Navn
+                <input id="assemblyName" type="text" required>
+            </label>
+
+            <label>
+                Resultat-komponent
+                <select id="resultComponentId" required></select>
+            </label>
+
+            <div>
+                <p><strong>Komponenter</strong></p>
+                <div id="assemblyItemRows"></div>
+                <button id="addAssemblyItemButton" type="button">+ Tilføj komponent</button>
+            </div>
+
+            <button type="submit">Opret stykliste</button>
+        </form>
+        <p id="assemblyMessage" class="message"></p>
+    </section>
+
+    <section>
+        <h2>Styklister</h2>
+        <div id="assemblyList"></div>
+    </section>
+
+    <section>
+        <h2>Valgt stykliste</h2>
+        <div id="assemblyDetails" class="details"></div>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script src="js/assemblies.js"></script>
+</body>
+</html>

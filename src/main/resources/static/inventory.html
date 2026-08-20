@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <h1>Lager</h1>
+
+    <section>
+        <h2>Registrer lageroptælling</h2>
+        <form id="inventoryCountForm" class="form">
+            <label>
+                Komponent
+                <select id="componentId" required></select>
+            </label>
+
+            <label>
+                Antal
+                <input id="actualQuantity" type="number" min="0" required>
+            </label>
+
+            <label>
+                Optalt af
+                <input id="countedBy" type="text" required>
+            </label>
+
+            <label>
+                Dato/tid
+                <input id="countedAt" type="datetime-local" required>
+            </label>
+
+            <button type="submit">Gem optælling</button>
+        </form>
+        <p id="inventoryMessage" class="message"></p>
+    </section>
+
+    <section>
+        <h2>Komponent-lager</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Komponent</th>
+                <th>Lager</th>
+                <th>Optalt af</th>
+                <th>Sidst optalt</th>
+            </tr>
+            </thead>
+            <tbody id="inventoryTableBody"></tbody>
+        </table>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script src="js/inventory.js"></script>
+</body>
+</html>

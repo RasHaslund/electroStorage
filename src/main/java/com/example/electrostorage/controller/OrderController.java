@@ -2,12 +2,15 @@ package com.example.electrostorage.controller;
 
 import com.example.electrostorage.dto.AddOrderLineRequest;
 import com.example.electrostorage.dto.CreateOrderRequest;
+import com.example.electrostorage.dto.OrderResponse;
 import com.example.electrostorage.dto.SendOrderRequest;
+import com.example.electrostorage.dto.UpdateDeliveryInfoRequest;
 import com.example.electrostorage.model.OrderLineModel;
 import com.example.electrostorage.model.PurchaseOrderModel;
 import com.example.electrostorage.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +36,11 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
+    @GetMapping("/{orderId}")
+    public OrderResponse getOrder(@PathVariable Long orderId) {
+        return orderService.getOrder(orderId);
+    }
+
     @PostMapping
     public ResponseEntity<PurchaseOrderModel> createOrder(@RequestBody CreateOrderRequest request) {
         PurchaseOrderModel order = orderService.createOrder(request);
@@ -45,8 +53,29 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderLine);
     }
 
+    @DeleteMapping("/{orderId}/components/{orderLineId}")
+    public ResponseEntity<Void> removeComponentFromOrder(@PathVariable Long orderId, @PathVariable Long orderLineId) {
+        orderService.removeComponentFromOrder(orderId, orderLineId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{orderId}/send")
     public PurchaseOrderModel sendOrder(@PathVariable Long orderId, @RequestBody(required = false) SendOrderRequest request) {
         return orderService.sendOrder(orderId, request);
+    }
+
+    @PatchMapping("/{orderId}/delivery-info")
+    public PurchaseOrderModel updateDeliveryInfo(@PathVariable Long orderId, @RequestBody UpdateDeliveryInfoRequest request) {
+        return orderService.updateDeliveryInfo(orderId, request);
+    }
+
+    @PatchMapping("/{orderId}/cancel")
+    public PurchaseOrderModel cancelOrder(@PathVariable Long orderId) {
+        return orderService.cancelOrder(orderId);
+    }
+
+    @PatchMapping("/{orderId}/receive")
+    public PurchaseOrderModel receiveOrder(@PathVariable Long orderId) {
+        return orderService.receiveOrder(orderId);
     }
 }

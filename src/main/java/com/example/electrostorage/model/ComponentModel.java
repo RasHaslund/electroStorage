@@ -25,6 +25,7 @@ public class ComponentModel {
     private String externalPartNumber;
     private String description;
     private boolean discontinued;
+    private int stockQuantity;
 
     public ComponentModel() {
     }
@@ -83,5 +84,13 @@ public class ComponentModel {
 
     public void setDiscontinued(boolean discontinued) {
         this.discontinued = discontinued;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 }

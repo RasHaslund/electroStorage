@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komponenter</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <h1>Komponenter</h1>
+
+    <section class="form-row">
+        <div>
+            <h2>Opret komponent</h2>
+            <form id="componentForm" class="form">
+                <label>
+                    Internt nummer
+                    <input id="internalNumber" type="number" required>
+                </label>
+
+                <label>
+                    Leverandør id
+                    <input id="supplierId" type="number" required>
+                </label>
+
+                <label>
+                    Eksternt varenummer
+                    <input id="externalPartNumber" type="text" required>
+                </label>
+
+                <label>
+                    Beskrivelse
+                    <input id="description" type="text" required>
+                </label>
+
+                <button type="submit">Opret komponent</button>
+            </form>
+        </div>
+
+        <div class="produce-box">
+            <h2 class="plain-heading">Saml komponent</h2>
+            <form id="produceAssemblyForm" class="form">
+                <label>
+                    Stykliste
+                    <select id="assemblyId" required></select>
+                </label>
+
+                <label>
+                    Antal
+                    <input id="assemblyQuantity" type="number" min="1" value="1" required>
+                </label>
+
+                <button type="submit">Saml komponent</button>
+            </form>
+            <p id="assemblyMessage" class="message"></p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Komponentliste</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Internt nr.</th>
+                <th>Leverandør</th>
+                <th>Eksternt nr.</th>
+                <th>Beskrivelse</th>
+                <th>Lager</th>
+                <th>Udgået</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="componentTableBody"></tbody>
+        </table>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script src="js/components.js"></script>
+</body>
+</html>

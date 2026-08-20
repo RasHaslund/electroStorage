@@ -1,10 +1,13 @@
 package com.example.electrostorage.dto;
 
+import java.time.LocalDateTime;
+
 public class InventoryCountRequest {
 
     private Long componentId;
     private Integer actualQuantity;
     private String countedBy;
+    private LocalDateTime countedAt;
 
     public InventoryCountRequest() {
     }
@@ -31,5 +34,13 @@ public class InventoryCountRequest {
 
     public void setCountedBy(String countedBy) {
         this.countedBy = countedBy;
+    }
+
+    public LocalDateTime getCountedAt() {
+        return countedAt;
+    }
+
+    public void setCountedAt(LocalDateTime countedAt) {
+        this.countedAt = countedAt;
     }
 }

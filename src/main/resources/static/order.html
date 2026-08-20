@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordre</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <p><a href="orders.html">← Tilbage til ordrer</a></p>
+
+    <h1>Ordre</h1>
+
+    <section id="orderDetails"></section>
+
+    <section>
+        <h2>Ordrelinjer</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Komponent</th>
+                <th>Antal</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="orderLineTableBody"></tbody>
+        </table>
+    </section>
+
+    <section id="editOrderSection">
+        <h2>Tilføj komponent</h2>
+        <form id="addComponentForm" class="form">
+            <label>
+                Komponent
+                <select id="componentId" required></select>
+            </label>
+
+            <label>
+                Antal
+                <input id="quantity" type="number" min="1" required>
+            </label>
+
+            <button type="submit">Tilføj komponent</button>
+        </form>
+    </section>
+
+    <section id="sendOrderSection">
+        <h2>Send ordre</h2>
+        <form id="sendOrderForm" class="form small-form">
+            <button type="submit">Send ordre</button>
+        </form>
+    </section>
+
+    <section id="deliveryInfoSection">
+        <h2>Leveringsinfo</h2>
+        <form id="deliveryInfoForm" class="form">
+            <label>
+                Trackingkode
+                <input id="trackingCode" type="text">
+            </label>
+
+            <label>
+                Forventet leveringsdato
+                <input id="expectedDeliveryDate" type="date">
+            </label>
+
+            <button type="submit">Gem leveringsinfo</button>
+        </form>
+    </section>
+
+    <section id="orderActionsSection">
+        <button id="receiveOrderButton" type="button">Marker som modtaget</button>
+        <button id="cancelOrderButton" type="button">Annullér ordre</button>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script src="js/order.js"></script>
+</body>
+</html>

@@ -5,20 +5,18 @@ import com.example.electrostorage.dto.InventoryOverviewResponse;
 import com.example.electrostorage.model.ComponentModel;
 import com.example.electrostorage.model.InventoryCountItemModel;
 import com.example.electrostorage.model.InventoryCountModel;
-import com.example.electrostorage.model.OrderLineModel;
 import com.example.electrostorage.repository.ComponentRepository;
 import com.example.electrostorage.repository.InventoryCountItemRepository;
 import com.example.electrostorage.repository.InventoryCountRepository;
 import com.example.electrostorage.repository.OrderLineRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class InventoryService {
@@ -39,32 +37,13 @@ public class InventoryService {
     }
 
     public List<InventoryOverviewResponse> getInventoryOverview() {
-        List<OrderLineModel> receivedOrderLines = orderLineRepository.findByPurchaseOrder_ReceivedDateIsNotNull();
-        Map<Long, InventoryOverviewResponse> overview = new LinkedHashMap<>();
-
-        for (OrderLineModel orderLine : receivedOrderLines) {
-            ComponentModel component = orderLine.getComponent();
-            Integer quantity = orderLine.getQuantity();
-
-            if (component == null || quantity == null) {
-                continue;
-            }
-
-            InventoryOverviewResponse existing = overview.get(component.getId());
-
-            if (existing == null) {
-                overview.put(
-                        component.getId(),
-                        new InventoryOverviewResponse(component.getId(), component.getDescription(), quantity)
-                );
-            } else {
-                existing.setTotalReceivedQuantity(existing.getTotalReceivedQuantity() + quantity);
-            }
-        }
-
-        return new ArrayList<>(overview.values());
+        return componentRepository.findAll()
+                .stream()
+                .map(this::createInventoryOverviewResponse)
+                .toList();
     }
 
+    @Transactional
     public InventoryCountItemModel registerCount(InventoryCountRequest request) {
         ComponentModel component = componentRepository.findById(request.getComponentId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Component not found"));
@@ -73,7 +52,13 @@ public class InventoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Actual quantity cannot be negative");
         }
 
-        InventoryCountModel inventoryCount = new InventoryCountModel(request.getCountedBy(), LocalDateTime.now());
+        LocalDateTime countedAt = request.getCountedAt();
+
+        if (countedAt == null) {
+            countedAt = LocalDateTime.now();
+        }
+
+        InventoryCountModel inventoryCount = new InventoryCountModel(request.getCountedBy(), countedAt);
         InventoryCountModel savedInventoryCount = inventoryCountRepository.save(inventoryCount);
 
         InventoryCountItemModel item = new InventoryCountItemModel(
@@ -82,6 +67,33 @@ public class InventoryService {
                 request.getActualQuantity()
         );
 
-        return inventoryCountItemRepository.save(item);
+        InventoryCountItemModel savedItem = inventoryCountItemRepository.save(item);
+
+        component.setStockQuantity(request.getActualQuantity());
+        componentRepository.save(component);
+
+        return savedItem;
+    }
+
+    private InventoryOverviewResponse createInventoryOverviewResponse(ComponentModel component) {
+        Optional<InventoryCountItemModel> latestCount = inventoryCountItemRepository
+                .findFirstByComponent_IdOrderByInventoryCount_CountedAtDesc(component.getId());
+
+        String lastCountedBy = "-";
+        LocalDateTime lastCountedAt = null;
+
+        if (latestCount.isPresent()) {
+            InventoryCountModel inventoryCount = latestCount.get().getInventoryCount();
+            lastCountedBy = inventoryCount.getCountedBy();
+            lastCountedAt = inventoryCount.getCountedAt();
+        }
+
+        return new InventoryOverviewResponse(
+                component.getId(),
+                component.getDescription(),
+                component.getStockQuantity(),
+                lastCountedBy,
+                lastCountedAt
+        );
     }
 }
