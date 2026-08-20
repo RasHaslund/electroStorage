@@ -1,9 +1,18 @@
+let isAdmin = false;
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#componentForm").addEventListener("submit", createComponent);
     document.querySelector("#produceAssemblyForm").addEventListener("submit", produceAssembly);
+    loadPage();
+});
+
+async function loadPage() {
+    const status = await getAuthStatus();
+    isAdmin = status.admin;
+    setAdminControlsVisible(isAdmin);
     loadComponents();
     loadAssemblies();
-});
+}
 
 async function loadComponents() {
     const response = await fetch("/components");
@@ -35,12 +44,15 @@ function displayComponents(components) {
             <td></td>
         `;
 
-        const button = document.createElement("button");
-        button.textContent = "Marker udgået";
-        button.disabled = component.discontinued;
-        button.addEventListener("click", () => markAsDiscontinued(component.id));
+        if (isAdmin) {
+            const button = document.createElement("button");
+            button.textContent = "Marker udgået";
+            button.disabled = component.discontinued;
+            button.addEventListener("click", () => markAsDiscontinued(component.id));
 
-        row.querySelector("td:last-child").appendChild(button);
+            row.querySelector("td:last-child").appendChild(button);
+        }
+
         tableBody.appendChild(row);
     });
 }
@@ -57,6 +69,7 @@ async function createComponent(event) {
 
     const response = await fetch("/components", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
             "Content-Type": "application/json"
         },
@@ -74,7 +87,8 @@ async function createComponent(event) {
 
 async function markAsDiscontinued(id) {
     const response = await fetch(`/components/${id}/discontinued`, {
-        method: "PATCH"
+        method: "PATCH",
+        credentials: "same-origin"
     });
 
     if (!response.ok) {

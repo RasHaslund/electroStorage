@@ -114,6 +114,16 @@ public class AssemblyService {
         componentRepository.save(resultComponent);
     }
 
+    @Transactional
+    public void deleteAssembly(Long id) {
+        PartsListModel partsList = partsListRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parts list not found"));
+
+        List<PartsListItemModel> items = partsListItemRepository.findByPartsList_Id(partsList.getId());
+        partsListItemRepository.deleteAll(items);
+        partsListRepository.delete(partsList);
+    }
+
     private AssemblyResponse createAssemblyResponse(PartsListModel partsList) {
         ComponentModel resultComponent = partsList.getResultComponent();
         List<PartsListItemModel> partsListItems = partsListItemRepository.findByPartsList_Id(partsList.getId());

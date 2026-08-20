@@ -1,9 +1,18 @@
+let isAdmin = false;
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#orderForm").addEventListener("submit", createOrder);
     document.querySelector("#supplierForm").addEventListener("submit", createSupplier);
+    loadPage();
+});
+
+async function loadPage() {
+    const status = await getAuthStatus();
+    isAdmin = status.admin;
+    setAdminControlsVisible(isAdmin);
     loadSuppliers();
     loadOrders();
-});
+}
 
 async function loadSuppliers() {
     const response = await fetch("/suppliers");
@@ -21,11 +30,35 @@ function displaySuppliers(suppliers) {
     const select = document.querySelector("#supplierId");
     select.innerHTML = "";
 
+    const supplierTableBody = document.querySelector("#supplierTableBody");
+    if (supplierTableBody) {
+        supplierTableBody.innerHTML = "";
+    }
+
     suppliers.forEach(supplier => {
         const option = document.createElement("option");
         option.value = supplier.id;
         option.textContent = supplier.name;
         select.appendChild(option);
+
+        if (supplierTableBody) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${supplier.id}</td>
+                <td>${supplier.name || ""}</td>
+                <td>${supplier.address || ""}</td>
+                <td></td>
+            `;
+
+            if (isAdmin) {
+                const button = document.createElement("button");
+                button.textContent = "Slet";
+                button.addEventListener("click", () => deleteSupplier(supplier.id));
+                row.querySelector("td:last-child").appendChild(button);
+            }
+
+            supplierTableBody.appendChild(row);
+        }
     });
 }
 
@@ -138,6 +171,7 @@ async function createSupplier(event) {
 
     const response = await fetch("/suppliers", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
             "Content-Type": "application/json"
         },
@@ -151,6 +185,20 @@ async function createSupplier(event) {
 
     document.querySelector("#supplierForm").reset();
     document.querySelector("#supplierMessage").textContent = "Leverandør oprettet";
+    loadSuppliers();
+}
+
+async function deleteSupplier(id) {
+    const response = await fetch(`/suppliers/${id}`, {
+        method: "DELETE",
+        credentials: "same-origin"
+    });
+
+    if (!response.ok) {
+        alert("Kunne ikke slette leverandør. Den kan være i brug.");
+        return;
+    }
+
     loadSuppliers();
 }
 

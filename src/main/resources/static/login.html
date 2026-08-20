@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<main class="page">
+    <h1>Admin login</h1>
+
+    <section>
+        <form id="loginForm" class="form wide-form">
+            <label>
+                Brugernavn
+                <input id="username" type="text" autocomplete="username" required>
+            </label>
+
+            <label>
+                Password
+                <input id="password" type="password" autocomplete="current-password" required>
+            </label>
+
+            <button type="submit">Log ind</button>
+        </form>
+        <p id="loginMessage" class="message"></p>
+    </section>
+</main>
+
+<script src="js/header.js"></script>
+<script>
+    document.querySelector("#loginForm").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: document.querySelector("#username").value,
+                password: document.querySelector("#password").value
+            })
+        });
+
+        if (!response.ok) {
+            document.querySelector("#loginMessage").textContent = "Forkert brugernavn eller password";
+            return;
+        }
+
+        window.location.href = "index.html";
+    });
+</script>
+</body>
+</html>

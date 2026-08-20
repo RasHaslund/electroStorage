@@ -1,12 +1,20 @@
 let components = [];
+let isAdmin = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#assemblyForm").addEventListener("submit", createAssembly);
     document.querySelector("#addAssemblyItemButton").addEventListener("click", addAssemblyItemRow);
 
+    loadPage();
+});
+
+async function loadPage() {
+    const status = await getAuthStatus();
+    isAdmin = status.admin;
+    setAdminControlsVisible(isAdmin);
     loadComponents();
     loadAssemblies();
-});
+}
 
 async function loadComponents() {
     const response = await fetch("/components");
@@ -107,6 +115,7 @@ async function createAssembly(event) {
 
     const response = await fetch("/assemblies", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
             "Content-Type": "application/json"
         },
@@ -148,53 +157,42 @@ function displayAssemblies(assemblies) {
         card.innerHTML = `
             <h3>${assembly.name}</h3>
             <p>Resultat: ${assembly.resultComponentDescription || ""}</p>
-            <button type="button">Vis indhold</button>
+            <ul></ul>
+            <div class="button-row"></div>
         `;
 
-        card.querySelector("button").addEventListener("click", () => loadAssemblyDetails(assembly.id));
+        const itemList = card.querySelector("ul");
+
+        assembly.items.forEach(item => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${item.quantity} x ${item.description}`;
+            itemList.appendChild(listItem);
+        });
+
+        const buttonRow = card.querySelector(".button-row");
+
+        if (isAdmin) {
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Slet";
+            deleteButton.addEventListener("click", () => deleteAssembly(assembly.id));
+            buttonRow.appendChild(deleteButton);
+        }
+
         assemblyList.appendChild(card);
     });
-
-    if (assemblies.length > 0) {
-        loadAssemblyDetails(assemblies[0].id);
-    }
 }
 
-async function loadAssemblyDetails(id) {
-    const response = await fetch(`/assemblies/${id}`);
+async function deleteAssembly(id) {
+    const response = await fetch(`/assemblies/${id}`, {
+        method: "DELETE",
+        credentials: "same-origin"
+    });
 
     if (!response.ok) {
-        alert("Kunne ikke hente stykliste");
+        alert("Kunne ikke slette stykliste");
         return;
     }
 
-    const assembly = await response.json();
-    displayAssemblyDetails(assembly);
-}
-
-function displayAssemblyDetails(assembly) {
-    const details = document.querySelector("#assemblyDetails");
-    details.innerHTML = "";
-
-    const title = document.createElement("h3");
-    title.textContent = assembly.name;
-    details.appendChild(title);
-
-    const result = document.createElement("p");
-    result.innerHTML = `<strong>Resultat:</strong> ${assembly.resultComponentDescription || ""}`;
-    details.appendChild(result);
-
-    const listTitle = document.createElement("p");
-    listTitle.innerHTML = "<strong>Komponenter:</strong>";
-    details.appendChild(listTitle);
-
-    const list = document.createElement("ul");
-
-    assembly.items.forEach(item => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${item.quantity} x ${item.description}`;
-        list.appendChild(listItem);
-    });
-
-    details.appendChild(list);
+    loadAssemblies();
 }

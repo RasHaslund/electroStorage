@@ -25,7 +25,7 @@
             </form>
         </div>
 
-        <div>
+        <div class="admin-only">
             <h2>Opret leverandør</h2>
             <form id="supplierForm" class="form">
                 <label>
@@ -42,6 +42,21 @@
             </form>
             <p id="supplierMessage" class="message"></p>
         </div>
+    </section>
+
+    <section>
+        <h2>Leverandører</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Navn</th>
+                <th>Adresse</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody id="supplierTableBody"></tbody>
+        </table>
     </section>
 
     <section>

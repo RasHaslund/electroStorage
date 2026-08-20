@@ -223,6 +223,12 @@ class RestEndpointTests {
     }
 
     @Test
+    void shouldDeleteSupplier() throws Exception {
+        mockMvc.perform(delete("/suppliers/1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void shouldGetInventory() throws Exception {
         mockMvc.perform(get("/inventory"))
                 .andExpect(status().isOk());
@@ -285,6 +291,12 @@ class RestEndpointTests {
                                 }
                                 """))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldDeleteAssembly() throws Exception {
+        mockMvc.perform(delete("/assemblies/1"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -403,7 +415,7 @@ class RestEndpointTests {
     private static class TestSupplierService extends SupplierService {
 
         TestSupplierService() {
-            super(null);
+            super(null, null, null);
         }
 
         @Override
@@ -414,6 +426,10 @@ class RestEndpointTests {
         @Override
         public SupplierModel createSupplier(CreateSupplierRequest request) {
             return new SupplierModel(request.getName(), request.getAddress());
+        }
+
+        @Override
+        public void deleteSupplier(Long id) {
         }
     }
 
@@ -460,6 +476,10 @@ class RestEndpointTests {
             if (quantity > 10) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough components in stock");
             }
+        }
+
+        @Override
+        public void deleteAssembly(Long id) {
         }
     }
 }

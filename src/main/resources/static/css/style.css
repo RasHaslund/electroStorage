@@ -29,6 +29,8 @@ body {
     display: flex;
     gap: 28px;
     flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
 }
 
 .nav a {
@@ -38,6 +40,21 @@ body {
 
 .nav a:hover {
     text-decoration: underline;
+}
+
+.nav button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: white;
+}
+
+#authNavigation {
+    margin-left: auto;
+}
+
+.admin-only {
+    display: none;
 }
 
 .page {
@@ -156,6 +173,12 @@ button:disabled {
     line-height: 1.8;
 }
 
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 @media (max-width: 700px) {
     table {
         display: block;
@@ -166,6 +189,10 @@ button:disabled {
         align-items: flex-start;
         flex-direction: column;
         gap: 10px;
+    }
+
+    #authNavigation {
+        margin-left: 0;
     }
 
     .form-row {
